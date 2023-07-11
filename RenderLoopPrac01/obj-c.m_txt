@@ -1,0 +1,64 @@
+//  obj-c.m
+//  RenderLoopPrac01
+//  Created by SDBX on 7/7/2023.
+
+#import <Foundation/Foundation.h>
+#import <CoreVideo/CoreVideo.h>
+
+@interface NSView;
+@end
+
+@implementation MyMetalView : NSView;  // which is a subclass of NSView
+
+- (BOOL) isOpaque {
+    return YES;
+}
+
+- (NSViewLayerContentsRedrawPolicy) layerContentsRedrawPolicy {
+    return NSViewLayerContentsRedrawOnSetNeedsDisplay;
+}
+
+- (CALayer *) makeBackingLayer {
+    // create CAMetalLayer with default device
+}
+
+- (BOOL) wantsLayer {
+    return YES;
+}
+
+- (BOOL) wantsUpdateLayer {
+    return YES;
+}
+
+- (void) displayLayer:(CALayer *)layer {
+    id<MTLCommandBuffer> cmdBuffer = [_commandQueue commandBuffer];
+    id<CAMetalDrawable> drawable = [((CAMetalLayer *) layer) nextDrawable];
+
+    [cmdBuffer enqueue];
+    [cmdBuffer presentDrawable:drawable];
+
+    // rendering
+
+    [cmdBuffer commit];
+}
+
+@end
+
+int main_objc() {
+    // init app, window and MyMetalView instance
+
+    // invocation will call [myMetalViewInstance setNeedsDisplay:YES]
+    [NSTimer scheduledTimerWithTimeInterval:1./60. invocation:setNeedsDisplayInvokation repeats:YES];
+
+    [NSApp run];
+    return 0;
+}
+
+static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* displayLinkContext)
+{
+
+    // [(MyMetalView *)displayLinkContext setNeedsDisplay:YES];
+    [(displayLink *)displayLinkContext setNeedsDisplay:YES];
+    return kCVReturnSuccess;
+}
+

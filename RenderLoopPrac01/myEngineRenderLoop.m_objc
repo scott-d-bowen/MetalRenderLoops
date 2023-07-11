@@ -1,0 +1,36 @@
+//  myEngineRenderLoop.m
+//  RenderLoopPrac01
+//  Created by SDBX on 11/7/2023.
+
+#import <Foundation/Foundation.h>
+
+void myEngineRenderLoop(my_engine *engine) {
+    my_engine_setup_render_pipeline(engine);
+
+
+    bool is_rendering = true;
+    while (is_rendering) @autoreleasepool {
+        switch (cp_layer_renderer_get_state(engine->layer_renderer)) {
+            case cp_layer_renderer_state_paused:
+                // Wait until the scene appears.
+                cp_layer_renderer_wait_until_running(layer);
+                break;
+
+
+            case cp_layer_renderer_state_running:
+                // Render the next frame.
+                my_engine_render_new_frame(engine);
+                break;
+
+
+            case cp_layer_renderer_state_invalidated:
+                // Exit the render loop.
+                is_rendering = false;
+                break;
+        }
+    }
+
+
+    my_engine_invalidate(engine);
+}
+

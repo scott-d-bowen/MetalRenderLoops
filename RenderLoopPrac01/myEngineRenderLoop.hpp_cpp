@@ -1,0 +1,13 @@
+//
+//  myEngineRenderLoop.hpp
+//  RenderLoopPrac01
+//
+//  Created by SDBX on 11/7/2023.
+//
+
+#ifndef myEngineRenderLoop_hpp
+#define myEngineRenderLoop_hpp
+
+#include <stdio.h>
+
+#endif /* myEngineRenderLoop_hpp */
